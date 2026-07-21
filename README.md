@@ -116,19 +116,32 @@ the budget without adding confidence.
    tests with the coverage gate.
 2. **container** (needs `quality`) — builds the image, runs it, smoke-tests `/healthz`, and on push
    pushes SHA-tagged and `latest` images to GHCR (`ghcr.io/<repo>`).
-3. **deploy** (needs `container`, main branch only) — currently a documented placeholder: it echoes
-   what would happen. No hosting platform is wired up yet in this build. Once one is chosen
-   (Fly.io/Railway/Render), this step becomes that platform's deploy trigger, gated on the same
-   `/healthz` check the container job already runs — the platform must not shift traffic to a new
-   revision until health passes.
+3. **deploy** (needs `container`, main branch only) — POSTs to a Render deploy hook
+   (`RENDER_DEPLOY_HOOK_URL` repo secret) to trigger a build of the same commit on Render, then polls
+   `/healthz` on the live URL until it's ready or times out. Render itself will not shift traffic to
+   the new revision until its own health check on `/healthz` passes, so a red suite never reaches
+   production and a broken revision never receives traffic.
+
+**Why Render:** free web-service tier with native Docker support and no credit card required — the
+other platforms named as candidates in the original design doc (Fly.io, Railway) both dropped their
+free tiers and now require billing to run anything beyond a short trial. The trade-off is that free
+Render services sleep after 15 minutes idle and take 30–60s to cold-start on the next request —
+acceptable for a demo, not for something needing an always-warm instance.
+
+**Deployment is defined as code:** `render.yaml` in the repo root is a Render Blueprint — the service,
+its Dockerfile path, health check path, and env vars are all declared there rather than clicked
+together in a dashboard. `autoDeploy` is deliberately `false` so Render never deploys on its own from
+a raw git push; only the CI deploy job (after quality + container pass) triggers a deploy, via the hook.
 
 **Rollback:** every image is tagged with its immutable commit SHA; `latest` is a convenience alias,
 never a deploy target. Since the app is stateless (§ persistence, above) and images are SHA-tagged,
 rollback is redeploying the previous SHA tag — no migration step, no session affinity to worry about.
+On Render specifically, rollback is selecting the previous successful deploy in the dashboard, which
+rebuilds that same commit.
 
 **Secrets:** never in the repo, a Dockerfile, a build arg, or a log line. CI uses the built-in
-`GITHUB_TOKEN` for GHCR; a live `ANTHROPIC_API_KEY` would come from GitHub Actions secrets and is not
-present in this build.
+`GITHUB_TOKEN` for GHCR and a `RENDER_DEPLOY_HOOK_URL` repo secret to trigger deploys; a live
+`ANTHROPIC_API_KEY` would come from GitHub Actions secrets and is not present in this build.
 
 ## Container
 

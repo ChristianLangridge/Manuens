@@ -71,9 +71,23 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger host deploy from SHA-tagged image
+      - name: Trigger Render deploy
         run: |
-          echo "No hosting platform is wired up yet — this job is a deliberate placeholder."
-          echo "Image ghcr.io/${{ github.repository }}:${{ github.sha }} is built, smoke-tested, and pushed."
-          echo "Once a platform (Fly.io/Railway/Render) is chosen, replace this step with its deploy trigger,"
-          echo "gated on the same health check the container job already runs."
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret not set yet — skipping deploy trigger."
+            echo "Once the Render service is created from render.yaml, add its deploy hook"
+            echo "URL as a repo secret named RENDER_DEPLOY_HOOK_URL to enable this step."
+            exit 0
+          fi
+          curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+      - name: Wait for Render health check
+        if: ${{ env.RENDER_URL != '' }}
+        env:
+          RENDER_URL: ${{ vars.RENDER_URL }}
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf "$RENDER_URL/healthz"; then exit 0; fi
+            sleep 10
+          done
+          echo "Render deploy did not become healthy in time"
+          exit 1

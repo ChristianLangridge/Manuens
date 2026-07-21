@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: manuens
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    autoDeploy: false
+    healthCheckPath: /healthz
+    envVars:
+      - key: EXTRACTOR
+        value: fake
+      - key: LOG_LEVEL
+        value: INFO
+      - key: PORT
+        value: "8000"
