@@ -20,3 +20,14 @@ def reagent_gap_severity(reagent_name: str) -> Literal["critical", "low"]:
     if any(keyword in name for keyword in CRITICAL_REAGENT_KEYWORDS):
         return "critical"
     return "low"
+
+
+def deviation_severity(
+    sensitivity: Literal["high", "low"],
+    expected: float,
+    actual: float,
+    tolerance: float,
+) -> Literal["material", "informational"] | None:
+    if abs(actual - expected) <= tolerance:
+        return None
+    return "material" if sensitivity == "high" else "informational"
