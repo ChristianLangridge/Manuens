@@ -1,5 +1,7 @@
 # Manuens
 
+**** [Technical Exercise using Claude Code] ****
+
 **Manuens — the capture layer for the bench.**
 
 You finish a protocol run, paste whatever shorthand you scrawled during it, and Manuens maps it onto
