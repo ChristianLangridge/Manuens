@@ -1,4 +1,5 @@
 import re
+from typing import Literal
 
 from app.models import ExtractedRun, Finding, Protocol, Step
 
@@ -10,7 +11,7 @@ _OVERNIGHT = re.compile(r"\bovernight\b|\bON\b")
 _HAS_DURATION_NUMBER = re.compile(r"\d+\s*(h|hr|hrs|hours|min|minutes)\b", re.IGNORECASE)
 _TEMP_NO_UNIT = re.compile(r"^\d+(\.\d+)?$")
 
-_AMBIGUITY_RECOVERABILITY = "perishable_today"
+_AMBIGUITY_RECOVERABILITY: Literal["perishable_today"] = "perishable_today"
 
 
 def _step_expects_overnight(step: Step | None) -> bool:
