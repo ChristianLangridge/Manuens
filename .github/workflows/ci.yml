@@ -81,11 +81,11 @@ jobs:
           fi
           curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
       - name: Wait for Render health check
-        if: ${{ env.RENDER_URL != '' }}
+        if: ${{ vars.RENDER_URL != '' }}
         env:
           RENDER_URL: ${{ vars.RENDER_URL }}
         run: |
-          for i in $(seq 1 30); do
+          for i in $(seq 1 40); do
             if curl -sf "$RENDER_URL/healthz"; then exit 0; fi
             sleep 10
           done
