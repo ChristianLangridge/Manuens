@@ -46,3 +46,8 @@ class Finding(BaseModel):
     step_id: str | None
     field: str | None
     source_phrase: str | None = None
+
+
+class AnalysisResult(BaseModel):
+    findings: list[Finding]
+    clean_step_ids: list[str]
