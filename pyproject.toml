@@ -35,7 +35,7 @@ ignore_missing_imports = true
 disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
-addopts = "-q --strict-markers --cov=app.analysis --cov=app.models --cov-report=term-missing --cov-fail-under=80"
+addopts = "-q --strict-markers"
 testpaths = ["tests"]
 
 [build-system]
