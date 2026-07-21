@@ -51,3 +51,10 @@ class Finding(BaseModel):
 class AnalysisResult(BaseModel):
     findings: list[Finding]
     clean_step_ids: list[str]
+
+
+class Run(BaseModel):
+    id: str
+    protocol_id: str
+    note_text: str
+    extracted: ExtractedRun
