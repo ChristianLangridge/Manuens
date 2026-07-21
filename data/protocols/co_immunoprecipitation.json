@@ -1,0 +1,46 @@
+{
+  "id": "co_immunoprecipitation",
+  "name": "Co-Immunoprecipitation",
+  "steps": [
+    {
+      "id": "1",
+      "name": "Lysis",
+      "required_fields": ["temperature_c"],
+      "expected_values": { "temperature_c": 4 },
+      "tolerance": {},
+      "sensitivity": "low"
+    },
+    {
+      "id": "2",
+      "name": "Bead incubation",
+      "required_fields": ["reagent", "lot"],
+      "expected_values": { "reagent": "protein G beads" },
+      "tolerance": {},
+      "sensitivity": "high"
+    },
+    {
+      "id": "3",
+      "name": "Antibody incubation",
+      "required_fields": ["antibody", "antibody_lot", "duration_min", "temperature_c"],
+      "expected_values": { "duration_min": 240, "temperature_c": 4 },
+      "tolerance": { "duration_min": 30 },
+      "sensitivity": "high"
+    },
+    {
+      "id": "4",
+      "name": "Wash",
+      "required_fields": ["buffer", "buffer_lot"],
+      "expected_values": {},
+      "tolerance": {},
+      "sensitivity": "low"
+    },
+    {
+      "id": "5",
+      "name": "Elution",
+      "required_fields": ["duration_min", "temperature_c"],
+      "expected_values": { "duration_min": 10, "temperature_c": 95 },
+      "tolerance": { "duration_min": 2 },
+      "sensitivity": "high"
+    }
+  ]
+}

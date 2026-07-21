@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.models import Step
+from app.models import Finding, Step
 
 
 def test_step_rejects_invalid_sensitivity() -> None:
@@ -13,4 +13,16 @@ def test_step_rejects_invalid_sensitivity() -> None:
             expected_values={},
             tolerance={},
             sensitivity="medium",
+        )
+
+
+def test_finding_rejects_invalid_type() -> None:
+    with pytest.raises(ValidationError):
+        Finding(
+            type="issue",
+            severity="critical",
+            recoverability="perishable_now",
+            message="bead lot missing",
+            step_id="3",
+            field="lot",
         )

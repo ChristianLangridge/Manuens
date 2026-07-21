@@ -1,0 +1,46 @@
+{
+  "id": "plasmid_transfection",
+  "name": "Plasmid Transfection",
+  "steps": [
+    {
+      "id": "1",
+      "name": "Seed cells",
+      "required_fields": ["cell_line", "passage_number", "confluency_pct"],
+      "expected_values": { "confluency_pct": 70 },
+      "tolerance": { "confluency_pct": 10 },
+      "sensitivity": "low"
+    },
+    {
+      "id": "2",
+      "name": "Prepare transfection complex",
+      "required_fields": ["transfection_reagent", "reagent_lot", "plasmid", "plasmid_lot"],
+      "expected_values": {},
+      "tolerance": {},
+      "sensitivity": "high"
+    },
+    {
+      "id": "3",
+      "name": "Complex formation incubation",
+      "required_fields": ["duration_min", "temperature_c"],
+      "expected_values": { "duration_min": 20, "temperature_c": 21 },
+      "tolerance": { "duration_min": 5 },
+      "sensitivity": "high"
+    },
+    {
+      "id": "4",
+      "name": "Add complex to cells and incubate",
+      "required_fields": ["duration_hours", "temperature_c"],
+      "expected_values": { "duration_hours": 48, "temperature_c": 37 },
+      "tolerance": { "duration_hours": 4 },
+      "sensitivity": "high"
+    },
+    {
+      "id": "5",
+      "name": "Media change",
+      "required_fields": ["media", "media_lot"],
+      "expected_values": {},
+      "tolerance": {},
+      "sensitivity": "low"
+    }
+  ]
+}
