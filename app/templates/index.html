@@ -24,7 +24,7 @@
     <p class="sub">Or try a seeded example (co-immunoprecipitation):</p>
     {% for example in examples %}
       <button type="button" class="example-btn"
-        onclick="document.getElementById('note_text').value = {{ example.text | tojson }}">
+        onclick='document.getElementById("note_text").value = {{ example.text | tojson }}'>
         {{ example.label }}
       </button>
     {% endfor %}
