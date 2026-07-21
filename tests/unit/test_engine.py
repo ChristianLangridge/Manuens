@@ -13,7 +13,7 @@ def _load_coip_protocol() -> Protocol:
 
 
 def test_calibration_note_produces_exactly_four_expected_findings() -> None:
-    """"ran the IP, 4C ON, used the new lot of protein G beads, only 2h on the ab
+    """ "ran the IP, 4C ON, used the new lot of protein G beads, only 2h on the ab
     bc I was late, spun 12k" — see TDD.md §16.
     """
     protocol = _load_coip_protocol()
@@ -35,9 +35,7 @@ def test_calibration_note_produces_exactly_four_expected_findings() -> None:
             ),
             ExtractedStep(
                 step_id="3",
-                fields={
-                    "duration_min": FieldValue(value=120, source_phrase="only 2h on the ab")
-                },
+                fields={"duration_min": FieldValue(value=120, source_phrase="only 2h on the ab")},
             ),
         ],
         unassigned=[UnassignedFragment(text="spun 12k", reason="no step reference")],

@@ -11,7 +11,9 @@ def test_buffer_reagent_is_low() -> None:
 
 def test_material_deviation_on_high_sensitivity_step() -> None:
     # 120 actual vs 240 expected, tolerance 30 -> well outside tolerance on a high-sensitivity step
-    assert deviation_severity(sensitivity="high", expected=240, actual=120, tolerance=30) == "material"
+    assert (
+        deviation_severity(sensitivity="high", expected=240, actual=120, tolerance=30) == "material"
+    )
 
 
 def test_same_deviation_on_low_sensitivity_step_is_informational() -> None:

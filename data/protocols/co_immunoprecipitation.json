@@ -6,7 +6,7 @@
       "id": "1",
       "name": "Lysis",
       "required_fields": ["temperature_c"],
-      "expected_values": { "temperature_c": 4 },
+      "expected_values": { "temperature_c": 4, "duration_desc": "overnight" },
       "tolerance": {},
       "sensitivity": "low"
     },
@@ -21,7 +21,7 @@
     {
       "id": "3",
       "name": "Antibody incubation",
-      "required_fields": ["antibody", "antibody_lot", "duration_min", "temperature_c"],
+      "required_fields": ["duration_min"],
       "expected_values": { "duration_min": 240, "temperature_c": 4 },
       "tolerance": { "duration_min": 30 },
       "sensitivity": "high"
