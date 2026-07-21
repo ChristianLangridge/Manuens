@@ -1,0 +1,3 @@
+Lysed at 4C. Bead incubation with protein G beads, lot PG-2201. Antibody incubation
+with anti-FLAG M2, lot AB-551, 240 min at 4C. Washed with PBS-T, lot W-99. Eluted for
+10 min at 95C.

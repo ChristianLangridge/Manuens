@@ -1,0 +1,4 @@
+Lysed cells at 4C for 30 min. Pre-cleared then incubated with protein G beads,
+lot PG-2201. Added anti-FLAG M2 antibody (lot AB-551), left on the rotator at 4C
+overnight instead of the usual 4h since I had to leave early. Washed 3x with PBS-T,
+lot W-99. Eluted at 95C for 10 min.
