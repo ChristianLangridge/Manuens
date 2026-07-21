@@ -1,6 +1,6 @@
 # Manuens
 
-**** [Technical Exercise using Claude Code] ****
+### [Technical Exercise using Claude Code] 
 
 **Manuens — the capture layer for the bench.**
 
