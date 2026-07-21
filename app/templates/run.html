@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Manuens — {{ protocol.name }}{% endblock %}
+{% block content %}
+<section class="run">
+  {% if not extraction_ok %}
+    <p class="extraction-warning">Extraction unavailable right now — showing your raw note below. <a href="/">Retry</a>.</p>
+  {% endif %}
+
+  {% include "partials/_analysis.html" %}
+
+  <section class="note-pane">
+    <h2>As pasted</h2>
+    <p class="note-text">{{ highlighted_note | safe }}</p>
+  </section>
+
+  <p class="back-link"><a href="/">&larr; start a new run</a></p>
+</section>
+{% endblock %}

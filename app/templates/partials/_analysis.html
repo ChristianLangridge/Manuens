@@ -1,0 +1,63 @@
+<div id="analysis-panel">
+  <section class="findings">
+    <h2>{{ findings|length }} thing{{ 's' if findings|length != 1 else '' }} to check before you leave — about 2 minutes</h2>
+    {% if not findings %}
+      <p class="clean-banner">Nothing to chase. This run is clean.</p>
+    {% endif %}
+    {% for finding in findings %}
+      <article class="finding-card severity-{{ finding.severity }}">
+        <div class="finding-head">
+          <span class="chip chip-{{ finding.type }}">{{ finding.type }}</span>
+          <span class="chip chip-severity">{{ finding.severity }}</span>
+        </div>
+        <p class="finding-message">{{ finding.message }}</p>
+        {% if finding.source_phrase %}
+          <p class="source-phrase" title="source phrase">&ldquo;{{ finding.source_phrase }}&rdquo;</p>
+        {% endif %}
+        {% if finding.type == "gap" %}
+          <form class="answer-form" hx-post="/runs/{{ run.id }}/answer" hx-target="#analysis-panel" hx-swap="outerHTML">
+            <input type="hidden" name="step_id" value="{{ finding.step_id }}">
+            <input type="hidden" name="field" value="{{ finding.field }}">
+            <input type="text" name="answer" placeholder="answer now, while it's still on the bench" required>
+            <button type="submit">Save</button>
+          </form>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </section>
+
+  <section class="record">
+    <h2>Assembled record</h2>
+    {% for step in protocol.steps %}
+      <div class="record-step">
+        <h3>{{ step.name }}</h3>
+        {% set extracted_step = extracted_by_step.get(step.id) %}
+        {% if extracted_step %}
+          <dl>
+            {% for field_name, field_value in extracted_step.fields.items() %}
+              <dt>{{ field_name.replace('_', ' ') }}</dt>
+              {% if field_value %}
+                <dd title="{{ field_value.source_phrase }}">{{ field_value.value }}</dd>
+              {% else %}
+                <dd class="missing">—</dd>
+              {% endif %}
+            {% endfor %}
+          </dl>
+        {% else %}
+          <p class="missing">not mentioned in this note</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    {% if extracted.unassigned %}
+      <div class="unassigned">
+        <h3>Unassigned</h3>
+        <ul>
+          {% for fragment in extracted.unassigned %}
+            <li>&ldquo;{{ fragment.text }}&rdquo; <span class="reason">({{ fragment.reason }})</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </section>
+</div>

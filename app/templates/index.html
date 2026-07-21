@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Manuens — paste your notes{% endblock %}
+{% block content %}
+<section class="intake">
+  <h1>Paste your bench shorthand</h1>
+  <p class="sub">Two minutes, right after the run — while you can still remember it.</p>
+
+  <form method="post" action="/runs">
+    <label for="protocol_id">Protocol</label>
+    <select name="protocol_id" id="protocol_id" required>
+      {% for protocol in protocols %}
+        <option value="{{ protocol.id }}">{{ protocol.name }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="note_text">Notes</label>
+    <textarea name="note_text" id="note_text" rows="8" maxlength="20000" required
+      placeholder="ran the IP, 4C ON, used the new lot of protein G beads, only 2h on the ab bc I was late, spun 12k"></textarea>
+
+    <button type="submit">Analyse</button>
+  </form>
+
+  <div class="examples">
+    <p class="sub">Or try a seeded example (co-immunoprecipitation):</p>
+    {% for example in examples %}
+      <button type="button" class="example-btn"
+        onclick="document.getElementById('note_text').value = {{ example.text | tojson }}">
+        {{ example.label }}
+      </button>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
