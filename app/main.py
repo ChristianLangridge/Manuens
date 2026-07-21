@@ -116,9 +116,7 @@ async def _extract_or_degrade(
     except Exception:
         degraded = ExtractedRun(
             steps=[],
-            unassigned=[
-                UnassignedFragment(text=note_text, reason="extraction unavailable, retry")
-            ],
+            unassigned=[UnassignedFragment(text=note_text, reason="extraction unavailable, retry")],
         )
         return degraded, False
 
@@ -135,7 +133,9 @@ async def create_run(
     extractor = get_extractor()
     extracted, extraction_ok = await _extract_or_degrade(extractor, note_text, protocol)
 
-    run = Run(id=str(uuid.uuid4()), protocol_id=protocol_id, note_text=note_text, extracted=extracted)
+    run = Run(
+        id=str(uuid.uuid4()), protocol_id=protocol_id, note_text=note_text, extracted=extracted
+    )
     run_repo.save(run)
 
     context = _run_context(request, run)

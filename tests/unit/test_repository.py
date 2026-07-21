@@ -8,7 +8,9 @@ PROTOCOLS_DIR = Path(__file__).resolve().parents[2] / "data" / "protocols"
 
 def test_save_then_get_returns_the_same_run() -> None:
     repo = InMemoryRunRepository()
-    run = Run(id="r1", protocol_id="p", note_text="note", extracted=ExtractedRun(steps=[], unassigned=[]))
+    run = Run(
+        id="r1", protocol_id="p", note_text="note", extracted=ExtractedRun(steps=[], unassigned=[])
+    )
 
     repo.save(run)
 
