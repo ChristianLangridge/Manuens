@@ -25,3 +25,43 @@ jobs:
         env:
           EXTRACTOR: fake
         run: pytest
+
+  container:
+    needs: quality
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t manuens:${{ github.sha }} .
+      - name: Smoke test
+        run: |
+          docker run -d --name manuens-smoke -p 8000:8000 -e EXTRACTOR=fake manuens:${{ github.sha }}
+          for i in $(seq 1 10); do
+            if curl -sf http://localhost:8000/healthz; then exit 0; fi
+            sleep 1
+          done
+          echo "healthz never became ready"
+          docker logs manuens-smoke
+          exit 1
+      - name: Stop smoke container
+        if: always()
+        run: docker rm -f manuens-smoke || true
+      - name: Log in to GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tag and push
+        if: github.event_name == 'push'
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}
+          IMAGE=$(echo "$IMAGE" | tr '[:upper:]' '[:lower:]')
+          docker tag manuens:${{ github.sha }} "$IMAGE:${{ github.sha }}"
+          docker tag manuens:${{ github.sha }} "$IMAGE:latest"
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"

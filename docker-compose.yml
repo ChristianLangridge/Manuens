@@ -1,0 +1,14 @@
+services:
+  manuens:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - EXTRACTOR=${EXTRACTOR:-fake}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - PORT=8000
+    volumes:
+      - ./app:/app/app
+      - ./data:/app/data
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
