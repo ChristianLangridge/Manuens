@@ -1,6 +1,6 @@
 # Manuens
 
-### [*Technical Exercise using Claude Code*] 
+### [*Industry Technical Exercise using Claude Code - 2h time constraint*] 
 
 **Manuens — the capture layer for the bench.**
 
