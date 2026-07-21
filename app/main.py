@@ -1,6 +1,8 @@
 import asyncio
 import html
+import logging
 import re
+import time
 import uuid
 from pathlib import Path
 
@@ -14,6 +16,7 @@ from app.config import settings
 from app.extraction.base import ExtractorProtocol
 from app.extraction.fake import FakeExtractor
 from app.models import ExtractedRun, ExtractedStep, FieldValue, Protocol, Run, UnassignedFragment
+from app.observability import configure_logging, log_run_event, request_id_middleware
 from app.storage.repository import InMemoryRunRepository, ProtocolRepository
 
 _EXTRACTION_TIMEOUT_SECONDS = 20
@@ -21,7 +24,11 @@ _EXTRACTION_TIMEOUT_SECONDS = 20
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR.parent / "data"
 
+configure_logging(settings.log_level)
+logger = logging.getLogger("manuens")
+
 app = FastAPI(title="Manuens")
+app.middleware("http")(request_id_middleware)
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
@@ -125,6 +132,7 @@ async def _extract_or_degrade(
 async def create_run(
     request: Request, protocol_id: str = Form(...), note_text: str = Form(...)
 ) -> HTMLResponse:
+    start = time.monotonic()
     note_text = note_text[:20000]
     protocol = protocol_repo.get(protocol_id)
     if protocol is None:
@@ -141,6 +149,15 @@ async def create_run(
     context = _run_context(request, run)
     context["highlighted_note"] = _highlight_note(note_text, run)
     context["extraction_ok"] = extraction_ok
+
+    log_run_event(
+        logger,
+        protocol_id=protocol_id,
+        note_length=len(note_text),
+        findings_count=len(context["findings"]),
+        latency_ms=round((time.monotonic() - start) * 1000, 1),
+        extraction_status="ok" if extraction_ok else "degraded",
+    )
     return templates.TemplateResponse(request, "run.html", context)
 
 

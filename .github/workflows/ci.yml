@@ -65,3 +65,15 @@ jobs:
           docker tag manuens:${{ github.sha }} "$IMAGE:latest"
           docker push "$IMAGE:${{ github.sha }}"
           docker push "$IMAGE:latest"
+
+  deploy:
+    needs: container
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger host deploy from SHA-tagged image
+        run: |
+          echo "No hosting platform is wired up yet — this job is a deliberate placeholder."
+          echo "Image ghcr.io/${{ github.repository }}:${{ github.sha }} is built, smoke-tested, and pushed."
+          echo "Once a platform (Fly.io/Railway/Render) is chosen, replace this step with its deploy trigger,"
+          echo "gated on the same health check the container job already runs."
